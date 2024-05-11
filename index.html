@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Biblioteca</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Biblioteca</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome do Livro</th>
+                    <th>Autor</th>
+                    <th>Disponível</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="livros">
+
+            </tbody>
+        </table>
+    
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdicionarLivro">
+            Adicionar Livros
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalAdicionarLivro" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarLivroLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fs-5" id="modalAdicionarLivroLabel">
+                        Adicionar Livro
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAdicionarLivro">
+                        <div class="from-group">
+                            <label for="nomeLivro">Nome do Livro</label>
+                            <br>
+                            <input type="text" class="from-control" id="nomeLivro" required>
+                        </div>
+                        <div class="from-group">
+                            <label for="autor">Autor</label>
+                            <br>
+                            <input type="text" class="from-control" id="autor" required>
+                        </div>
+
+                        <br>
+                        <button type="submit" class="btn btn-primary">
+                            Adicionar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <script src="/scripts/biblioteca.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
