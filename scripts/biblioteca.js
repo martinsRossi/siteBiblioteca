@@ -39,4 +39,25 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     carregarLivros()
+
+    document.addEventListener('click', function (event) {
+        if(event.target.classList.contains('btn-retirar')) {
+            const livroId = event.target.getAttribute('data-id');
+        }
+    })
+
+    function retirarLivro(livroID){
+        fetch(`${apiUrl}/${livroID}`, {
+            method: 'PATH',
+            mode: 'no-cors',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                    disponivel: false
+                })
+        })
+        .then(() => carregarLivros())
+        .catch(error => console.log('Erro ao retirar livro: ', error))
+    }
 })
