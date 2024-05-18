@@ -1,63 +1,101 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const apiUrl = "http://localhost:3000/livros"
-    
+    // Endpoint da API
+    const apiUrl = 'http://localhost:3000/livros';
+
+    // Função para carregar os livros
     function carregarLivros() {
         fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            const livrosBody = document.getElementById("livros");
-            livrosBody.innerHTML = '';
-            
-            data.forEach(livro => {
-                const disponibilidade = livro.disponivel ? 'Sim' : 'Não';
-                
-                // HTML
-                const row = `
-                    <tr>
-                        <td>${livro.nome}</td>
-                        <td>${livro.autor}</td>
-                        <td>${disponibilidade}</td>
-                        <td>
-                            <button class="btn btn-danger btn-devolver" data-id="${livro.id}">
-                            Devolver Livro
-                            </button>
+            .then(response => response.json())
+            .then(data => {
+                const livrosBody = document.getElementById('livros');
+                livrosBody.innerHTML = '';
 
-                            <button class="btn btn-success btn-retirar" data-id="${livro.id}">
-                            Retirar Livro
-                            </button>
-                        </td>
-                    </tr>
-                `;
-
-                livrosBody.innerHTML += row;
-
-
-            });
-            
-        })
-        .catch(error => console.log("Erro ao carregar os livros ", error));
+                data.forEach(livro => {
+                    const disponibilidade = livro.disponivel ? 'Sim' : 'Não';
+                    const row = `
+                        <tr>
+                            <td>${livro.nome}</td>
+                            <td>${livro.autor}</td>
+                            <td>${disponibilidade}</td>
+                            <td>
+                                <button class="btn btn-danger btn-devolver" data-id="${livro.id}">Devolver Livro</button>
+                                <button class="btn btn-success btn-retirar" data-id="${livro.id}">Retirar Livro</button>
+                            </td>
+                        </tr>
+                    `;
+                    livrosBody.innerHTML += row;
+                });
+            })
+            .catch(error => console.error('Erro ao carregar os livros:', error));
     }
-    
-    carregarLivros()
 
-    document.addEventListener('click', function (event) {
-        if(event.target.classList.contains('btn-retirar')) {
-            const livroId = event.target.getAttribute('data-id');
-        }
-    })
+    // Carregar livros quando a página carregar
+    carregarLivros();
 
-    function retirarLivro(livroID){
-        fetch(`${apiUrl}/${livroID}`, {
-            method: 'PATH',
-            mode: 'no-cors',
+    // Adicionar livro
+    document.getElementById('formAdicionarLivro').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const nomeLivro = document.getElementById('nomeLivro').value;
+        const autor = document.getElementById('autor').value;
+
+        fetch(apiUrl, {
+            method: 'POST',
             headers: {
-                'Content-type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                    disponivel: false
-                })
+                nome: nomeLivro,
+                autor: autor,
+                disponivel: true
+            }),
+        })
+        .then(response => response.json())
+        .then(() => {
+            $('#modalAdicionarLivro').modal('hide');
+            carregarLivros();
+        })
+        .catch(error => console.error('Erro ao adicionar o livro:', error));
+    });
+
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('btn-devolver')) {
+            const livroId = event.target.getAttribute('data-id');
+            devolverLivro(livroId);
+        }
+
+        if (event.target.classList.contains('btn-retirar')) {
+            const livroId = event.target.getAttribute('data-id');
+            retirarLivro(livroId);
+        }
+    });
+
+
+    function devolverLivro(livroId){
+        fetch(`${apiUrl}/${livroId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                disponivel: true
+            }),
         })
         .then(() => carregarLivros())
-        .catch(error => console.log('Erro ao retirar livro: ', error))
+        .catch(error => console.error('Erro ao devolver o livro:', error));
     }
-})
+
+    function retirarLivro(livroId) {
+        fetch(`${apiUrl}/${livroId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                disponivel: false
+            }),
+        })
+        .then(() => carregarLivros())
+        .catch(error => console.error('Erro ao retirar o livro:', error));
+    }
+
+});
